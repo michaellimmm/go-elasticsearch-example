@@ -9,13 +9,24 @@ This is a simple example of using Elasticsearch with Go. The project provides a 
 ## Prerequisites
 
 - Go (version 1.17 or later)
-- Elasticsearch (version 7.x or later)
+- Docker
+- Docker Compose
 
-## How to Use
+## Running the Project
 
-### Building the Project
+### Step 1: Start Elasticsearch using Docker Compose
 
-To build the project, run the following command:
+Before running the command-line interface, you need to start the Elasticsearch instance using Docker Compose. Run the following command:
+
+```bash
+docker-compose up -d
+```
+
+This will start the Elasticsearch instance in detached mode.
+
+### Step 2: Build and Run the Command-Line Interface
+
+Once the Elasticsearch instance is running, you can build and run the command-line interface using the following command:
 
 ```bash
 go build cmd/cli/main.go
@@ -23,9 +34,9 @@ go build cmd/cli/main.go
 
 This will create an executable file named `main` in the `cmd/cli` directory.
 
-### Running the Project
+### Step 3: Run the Command-Line Interface
 
-To run the project, use the following command:
+To run the command-line interface, use the following command:
 
 ```bash
 go run cmd/cli/main.go -command <command> -file <file>
