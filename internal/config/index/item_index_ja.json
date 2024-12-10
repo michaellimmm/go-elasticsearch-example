@@ -1,0 +1,193 @@
+{
+    "mappings": {
+        "dynamic_templates": [
+            {
+                "strings_as_ja_analyzed_texts_and_keywords": {
+                    "match_mapping_type": "string",
+                    "mapping": {
+                        "analyzer": "ja_kuromoji_index_analyzer",
+                        "type": "text",
+                        "fields": {
+                            "ngram": {
+                                "type": "text",
+                                "analyzer": "ja_ngram_index_analyzer"
+                            },
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        "properties": {
+            "languageCode": {
+                "type": "keyword"
+            },
+            "mongoId": {
+                "type": "keyword",
+                "index": false
+            },
+            "sku": {
+                "type": "keyword",
+                "index": false
+            },
+            "title": {
+                "analyzer": "ja_kuromoji_index_analyzer",
+                "type": "text",
+                "fields": {
+                    "ngram": {
+                        "type": "text",
+                        "analyzer": "ja_ngram_index_analyzer"
+                    }
+                }
+            },
+            "link": {
+                "type": "keyword",
+                "index": false
+            },
+            "price": {
+                "properties": {
+                    "currencyCode": {
+                        "type": "keyword"
+                    },
+                    "priceMajor": {
+                        "type": "integer"
+                    },
+                    "priceMinor": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "record": {
+                "properties": {
+                    "Created": {
+                        "type": "date"
+                    },
+                    "Updated": {
+                        "type": "date"
+                    },
+                    "Deleted": {
+                        "type": "date"
+                    }
+                }
+            },
+            "description": {
+                "analyzer": "ja_kuromoji_index_analyzer",
+                "type": "text",
+                "fields": {
+                    "ngram": {
+                        "type": "text",
+                        "analyzer": "ja_ngram_index_analyzer"
+                    }
+                }
+            },
+            "isDeleted": {
+                "type": "boolean"
+            }
+        }
+    },
+    "settings": {
+        "analysis": {
+            "char_filter": {
+                "normalize": {
+                    "type": "icu_normalizer",
+                    "name": "nfkc",
+                    "mode": "compose"
+                }
+            },
+            "tokenizer": {
+                "ja_kuromoji_tokenizer": {
+                    "mode": "search",
+                    "type": "kuromoji_tokenizer",
+                    "discard_compound_token": true,
+                    "user_dictionary_rules": [
+                        "東京スカイツリー,東京 スカイツリー,トウキョウ スカイツリー,カスタム名詞"
+                    ]
+                },
+                "ja_ngram_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 2,
+                    "max_gram": 2,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            },
+            "filter": {
+                "ja_index_synonym": {
+                    "type": "synonym",
+                    "lenient": false,
+                    "synonyms": []
+                },
+                "ja_search_synonym": {
+                    "type": "synonym_graph",
+                    "lenient": false,
+                    "synonyms": [
+                        "米国, アメリカ",
+                        "東京大学, 東大"
+                    ]
+                }
+            },
+            "analyzer": {
+                "ja_kuromoji_index_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip",
+                        "normalize"
+                    ],
+                    "tokenizer": "ja_kuromoji_tokenizer",
+                    "filter": [
+                        "kuromoji_baseform",
+                        "kuromoji_part_of_speech",
+                        "ja_index_synonym",
+                        "cjk_width",
+                        "ja_stop",
+                        "kuromoji_stemmer",
+                        "lowercase"
+                    ]
+                },
+                "ja_kuromoji_search_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip",
+                        "normalize"
+                    ],
+                    "tokenizer": "ja_kuromoji_tokenizer",
+                    "filter": [
+                        "kuromoji_baseform",
+                        "kuromoji_part_of_speech",
+                        "cjk_width",
+                        "ja_stop",
+                        "kuromoji_stemmer",
+                        "lowercase"
+                    ]
+                },
+                "ja_ngram_index_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip",
+                        "normalize"
+                    ],
+                    "tokenizer": "ja_ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "ja_ngram_search_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip",
+                        "normalize"
+                    ],
+                    "tokenizer": "ja_ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            }
+        }
+    }
+}

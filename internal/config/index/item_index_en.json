@@ -1,0 +1,165 @@
+{
+    "mappings": {
+        "dynamic_templates": [
+            {
+                "strings_as_en_analyzed_texts_and_keywords": {
+                    "match_mapping_type": "string",
+                    "mapping": {
+                        "analyzer": "en_index_analyzer",
+                        "type": "text",
+                        "fields": {
+                            "ngram": {
+                                "type": "text",
+                                "analyzer": "en_ngram_index_analyzer"
+                            },
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        "properties": {
+            "languageCode": {
+                "type": "keyword"
+            },
+            "mongoId": {
+                "type": "keyword",
+                "index": false
+            },
+            "sku": {
+                "type": "keyword",
+                "index": false
+            },
+            "title": {
+                "analyzer": "en_index_analyzer",
+                "type": "text",
+                "fields": {
+                    "ngram": {
+                        "type": "text",
+                        "analyzer": "en_ngram_index_analyzer"
+                    }
+                }
+            },
+            "link": {
+                "type": "keyword",
+                "index": false
+            },
+            "price": {
+                "properties": {
+                    "currencyCode": {
+                        "type": "keyword"
+                    },
+                    "priceMajor": {
+                        "type": "integer"
+                    },
+                    "priceMinor": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "record": {
+                "properties": {
+                    "Created": {
+                        "type": "date"
+                    },
+                    "Updated": {
+                        "type": "date"
+                    },
+                    "Deleted": {
+                        "type": "date"
+                    }
+                }
+            },
+            "description": {
+                "analyzer": "en_index_analyzer",
+                "type": "text",
+                "fields": {
+                    "ngram": {
+                        "type": "text",
+                        "analyzer": "en_ngram_index_analyzer"
+                    }
+                }
+            },
+            "isDeleted": {
+                "type": "boolean"
+            }
+        }
+    },
+    "settings": {
+        "analysis": {
+            "tokenizer": {
+                "en_tokenizer": {
+                    "mode": "search",
+                    "type": "standard",
+                    "discard_compound_token": true
+                },
+                "en_ngram_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 2,
+                    "max_gram": 2,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            },
+            "filter": {
+                "en_index_synonym": {
+                    "type": "synonym",
+                    "lenient": false,
+                    "synonyms": []
+                },
+                "en_search_synonym": {
+                    "type": "synonym_graph",
+                    "lenient": false,
+                    "synonyms": []
+                }
+            },
+            "analyzer": {
+                "en_index_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip"
+                    ],
+                    "tokenizer": "en_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "en_search_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip"
+                    ],
+                    "tokenizer": "en_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "en_ngram_index_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip"
+                    ],
+                    "tokenizer": "en_ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "en_ngram_search_analyzer": {
+                    "type": "custom",
+                    "char_filter": [
+                        "html_strip"
+                    ],
+                    "tokenizer": "en_ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            }
+        }
+    }
+}
