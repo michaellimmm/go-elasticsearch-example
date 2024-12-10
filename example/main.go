@@ -77,13 +77,27 @@ func main() {
 
 	// logger.Info("bulk", slog.Any("result", bulkResponse.Result))
 
-	searchResponse, err := client.Count("products", esquery.MatchAll())
+	searchRequest := esquery.NewSearchQueryBuilder().
+		SetSize(10).
+		SetFrom(0).
+		SetQuery(esquery.MatchAll()).
+		Build()
+
+	searchResponse, err := client.Search("products", *searchRequest)
 	if err != nil {
 		logger.Error("search", slog.Any("error", err))
 		return
 	}
 
 	logger.Info("search", slog.Any("result", searchResponse.Result))
+
+	countRes, err := client.Count("products", esquery.MatchAll())
+	if err != nil {
+		logger.Error("search", slog.Any("error", err))
+		return
+	}
+
+	logger.Info("count", slog.Any("result", countRes.Result))
 }
 
 func ping(client esclient.Client) error {

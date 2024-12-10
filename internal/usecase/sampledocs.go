@@ -32,7 +32,7 @@ func (s *sampleDocs) Execute(index string, filename string) error {
 	reader := csv.NewReader(file)
 	var items []*model.Item
 	if err := gocsv.UnmarshalCSV(reader, &items); err != nil {
-		fmt.Printf("Error: %v\n", err)
+		fmt.Printf("failed to UnmarshalCSV: %+v\n", err)
 		return err
 	}
 
@@ -45,7 +45,7 @@ func (s *sampleDocs) Execute(index string, filename string) error {
 	}
 
 	sample := rs.GetSample()
-	fmt.Printf("sample size: %d\n", len(sample))
+	fmt.Printf("total rows: %d, sample size: %d\n", totalRows, len(sample))
 
 	termQueries := make([]esquery.QueryType, 0, len(sample))
 	for _, item := range sample {

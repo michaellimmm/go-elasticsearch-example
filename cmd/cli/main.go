@@ -17,48 +17,41 @@ const (
 )
 
 func main() {
-	var (
-		command      string
-		filename     string
-		languageCode string
-	)
-	help := flag.Bool("help", false, "Display help")
-
-	flag.StringVar(&command, "command", "", "Command eg. create-index, indexing, match-docs")
-	flag.StringVar(&filename, "file", "", "File name")
-	flag.StringVar(&languageCode, "lang", "ja", "Language code")
+	command := flag.String("command", "", "Command eg. create-index, indexing, match-docs")
+	filename := flag.String("file", "", "path of csv file")
+	languageCode := flag.String("lang", "ja", "Language code")
 
 	flag.Parse()
 
-	if *help || command == "" {
+	if *command == "" {
 		flag.PrintDefaults()
 		return
 	}
 
-	switch Command(command) {
+	switch Command(*command) {
 	case CreateIndex:
 		if err := createIndex(); err != nil {
 			fmt.Println(err)
 		}
 	case Indexing:
-		if filename == "" {
+		if *filename == "" {
 			fmt.Println("filename is required to run this indexing command")
 			return
 		}
-		if err := indexing(languageCode, filename); err != nil {
+		if err := indexing(*languageCode, *filename); err != nil {
 			fmt.Println(err)
 		}
 	case MatchDocs:
-		if filename == "" {
+		if *filename == "" {
 			fmt.Println("filename is required to run this match-docs command")
 			return
 		}
 
-		if err := matchDocs(filename, languageCode); err != nil {
+		if err := matchDocs(*filename, *languageCode); err != nil {
 			fmt.Println(err)
 		}
 	default:
-		fmt.Printf("unknown command: %s, valid commands: create-index, indexing, match-docs\n", command)
+		fmt.Printf("unknown command: %s, valid commands: create-index, indexing, match-docs\n", *command)
 	}
 }
 
