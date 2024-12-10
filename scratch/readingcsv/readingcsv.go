@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/internal/utils"
 	"os"
 	"sync"
 
@@ -53,8 +52,7 @@ func ReadCSVWithChannel(filename string) error {
 	}()
 
 	go func() {
-		reader := csv.NewReader(file)
-		if err := gocsv.UnmarshalToChan(utils.ConvertCSVReaderToReader(reader), queue); err != nil {
+		if err := gocsv.UnmarshalToChan(file, queue); err != nil {
 			fmt.Printf("failed to UnmarshalToChan: %+v\n", err)
 			return
 		}

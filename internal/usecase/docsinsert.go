@@ -1,10 +1,8 @@
 package usecase
 
 import (
-	"encoding/csv"
 	"fmt"
 	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/internal/utils"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"os"
 	"sync"
@@ -38,8 +36,7 @@ func (u *docsInsertUseCase) Execute(indexname string, filename string) error {
 	}()
 
 	go func() {
-		reader := csv.NewReader(file)
-		if err := gocsv.UnmarshalToChan(utils.ConvertCSVReaderToReader(reader), queue); err != nil {
+		if err := gocsv.UnmarshalToChan(file, queue); err != nil {
 			fmt.Printf("failed to UnmarshalToChan: %+v\n", err)
 			return
 		}
