@@ -1,25 +1,34 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"github/shaolim/go-elasticsearch-example/internal/config"
 	"github/shaolim/go-elasticsearch-example/internal/usecase"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/go-elasticsearch-example/pkg/gcs"
+	"os"
+	"path/filepath"
 )
 
 type Command string
 
 const (
-	CreateIndex Command = "create-index"
-	Indexing    Command = "indexing"
-	MatchDocs   Command = "match-docs"
+	CreateIndex     Command = "create-index"
+	Indexing        Command = "indexing"
+	MatchDocs       Command = "match-docs"
+	UploadfileToGCS Command = "upload-file-to-gcs"
 )
 
 func main() {
-	command := flag.String("command", "", "Command eg. create-index, indexing, match-docs")
+	os.Setenv("STORAGE_EMULATOR_HOST", "localhost:4443")
+	os.Setenv(`PUBSUB_EMULATOR_HOST`, `localhost:8085`)
+
+	command := flag.String("command", "", "Command eg. create-index, indexing, match-docs, upload-file-to-gcs")
 	filename := flag.String("file", "", "path of csv file")
 	languageCode := flag.String("lang", "ja", "Language code")
+	bucketName := flag.String("bucket", "test-bucket", "Bucket name")
 
 	flag.Parse()
 
@@ -48,6 +57,15 @@ func main() {
 		}
 
 		if err := matchDocs(*filename, *languageCode); err != nil {
+			fmt.Println(err)
+		}
+	case UploadfileToGCS:
+		if *filename == "" {
+			fmt.Println("filename is required to run this upload-file-to-gcs command")
+			return
+		}
+
+		if err := uploadFileToGCS(*bucketName, *filename); err != nil {
 			fmt.Println(err)
 		}
 	default:
@@ -93,6 +111,23 @@ func matchDocs(filename string, languageCode string) error {
 	matchDocs := usecase.NewSampleDocsUseCase(client)
 	if err := matchDocs.Execute(index, filename); err != nil {
 		fmt.Printf("failed to match docs, error: %v\n", err)
+		return err
+	}
+	return nil
+}
+
+func uploadFileToGCS(bucketName, filename string) error {
+	client := esclient.NewClient("http://localhost:9200")
+	gcsClient, err := gcs.NewClient(context.Background(), "test-project", "test-topic")
+	if err != nil {
+		return err
+	}
+
+	objectName := filepath.Base(filename)
+
+	uploadFileToGCSUC := usecase.NewUploadFileToGCSUseCase(client, gcsClient)
+	if err := uploadFileToGCSUC.Execute(context.Background(), bucketName, objectName, filename); err != nil {
+		fmt.Printf("failed to upload file to GCS, error: %v\n", err)
 		return err
 	}
 	return nil
