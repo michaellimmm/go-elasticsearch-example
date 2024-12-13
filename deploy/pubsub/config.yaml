@@ -1,0 +1,4 @@
+topics:
+  - topic_id: "your-topic-id"
+    subscriptions:
+      - name: "your-subscription-name"

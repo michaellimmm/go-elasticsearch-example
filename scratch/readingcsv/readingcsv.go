@@ -3,11 +3,12 @@ package readingcsv
 import (
 	"encoding/csv"
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/internal/model"
 	"os"
 	"sync"
 
 	"github.com/gocarina/gocsv"
+
+	"github/shaolim/go-elasticsearch-example/app/cli/model"
 )
 
 func ReadCSVWithoutChannel(filename string) error {

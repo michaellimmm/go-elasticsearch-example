@@ -1,0 +1,5 @@
+buckets:
+  - name: "test" # bucket name
+    notifications:
+      - topic: "your-topic-id" # pubsub topic name
+        subscription: "your-subscription-name"

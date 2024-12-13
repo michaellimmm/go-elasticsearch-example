@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/internal/utils/sampler"
+	"github/shaolim/go-elasticsearch-example/utils/sampler"
 )
 
 func main() {

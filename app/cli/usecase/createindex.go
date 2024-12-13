@@ -4,9 +4,10 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
-	index "github/shaolim/go-elasticsearch-example/internal/config/index"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"io"
+
+	index "github/shaolim/go-elasticsearch-example/configs/index"
+	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 )
 
 const (

@@ -3,10 +3,11 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
-	"github/shaolim/go-elasticsearch-example/pkg/gcs"
 	"io"
 	"os"
+
+	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/go-elasticsearch-example/pkg/gcs"
 )
 
 type uploadFileToGCSUseCase struct {

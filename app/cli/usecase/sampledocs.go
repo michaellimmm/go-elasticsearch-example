@@ -3,13 +3,14 @@ package usecase
 import (
 	"encoding/csv"
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/internal/utils/sampler"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
 	"os"
 
 	"github.com/gocarina/gocsv"
+
+	"github/shaolim/go-elasticsearch-example/app/cli/model"
+	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
+	"github/shaolim/go-elasticsearch-example/utils/sampler"
 )
 
 type sampleDocs struct {

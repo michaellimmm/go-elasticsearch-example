@@ -2,12 +2,13 @@ package usecase
 
 import (
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"os"
 	"sync"
 
 	"github.com/gocarina/gocsv"
+
+	"github/shaolim/go-elasticsearch-example/app/cli/model"
+	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 )
 
 type docsInsertUseCase struct {

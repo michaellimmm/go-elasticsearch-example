@@ -1,7 +1,6 @@
 package esclient
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -31,8 +30,6 @@ func (c *client) CreateIndex(index string, body io.Reader) (*Response[IndexCreat
 		return nil, err
 	}
 	defer res.Body.Close()
-
-	fmt.Println(req.Header)
 
 	response := &Response[IndexCreationResult]{
 		StatusCode: res.StatusCode,

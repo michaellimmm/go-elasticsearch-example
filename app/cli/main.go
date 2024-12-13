@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/internal/config"
-	"github/shaolim/go-elasticsearch-example/internal/usecase"
+	"github/shaolim/go-elasticsearch-example/app/cli/usecase"
+	config "github/shaolim/go-elasticsearch-example/configs"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"github/shaolim/go-elasticsearch-example/pkg/gcs"
 	"os"
@@ -78,8 +78,7 @@ func createIndex() error {
 
 	createIndexUC := usecase.NewCreateIndexUseCase(client)
 	if err := createIndexUC.Execute(); err != nil {
-		fmt.Printf("failed to create index, error: %v\n", err)
-		return err
+		return fmt.Errorf("failed to create index, error: %v", err)
 	}
 
 	return nil

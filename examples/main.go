@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github/shaolim/go-elasticsearch-example/internal/utils/middleware"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
+	"github/shaolim/go-elasticsearch-example/utils/middleware"
 	"log/slog"
 	"net/http"
 	"os"
