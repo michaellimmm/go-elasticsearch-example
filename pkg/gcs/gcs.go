@@ -67,9 +67,7 @@ func NewClient(ctx context.Context, projectID string, topicID string, opts ...op
 		return nil, err
 	}
 	if !ok {
-		if topic, err = pbClient.CreateTopic(ctx, topicID); err != nil {
-			return nil, err
-		}
+		return nil, fmt.Errorf("topic %s does not exist", topicID)
 	}
 
 	return &Client{

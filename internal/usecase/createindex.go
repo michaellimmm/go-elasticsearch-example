@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	index "github/shaolim/go-elasticsearch-example/configs/index"
+	index "github/shaolim/go-elasticsearch-example/config/index"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 )
 

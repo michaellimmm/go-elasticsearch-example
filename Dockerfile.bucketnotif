@@ -1,0 +1,30 @@
+FROM golang:1.22.5 AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the go.mod and go.sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the application code
+COPY . .
+
+# Build the application
+WORKDIR /app/cmd/infra/bucketnotif
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+
+# Main container image
+FROM alpine:latest
+
+# Copy the 'deploy' directory into the final stage
+COPY --from=builder /app/deploy /app/deploy
+# Copy the built binary from the builder stage
+COPY --from=builder /app/cmd/infra/bucketnotif/main /app/main
+
+WORKDIR /app
+
+
+CMD ["./main"]

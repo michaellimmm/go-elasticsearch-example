@@ -4,7 +4,7 @@ services:
   elasticsearch:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.elasticsearch
     image: elasticsearch-with-plugins
     container_name: elasticsearch
     environment:
@@ -14,22 +14,58 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - ./data:/usr/share/elasticsearch/data
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - appnet
+
   pubsubemulator:
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
-    command: /usr/bin/gcloud beta emulators pubsub start --host-port=0.0.0.0:8085
+    command: gcloud beta emulators pubsub start --host-port=0.0.0.0:8085
     ports:
       - "8085:8085"
+    networks:
+      - appnet
+
   fake-gcs-server:
-    depends_on:
-      - pubsubemulator
     image: fsouza/fake-gcs-server
     ports:
       - "4443:4443"
     volumes:
-      - ./data:/storage
-    command: -scheme http -public-host ${URL:-localhost}:4443 
-    environment:
-      - PUBSUB_EMULATOR_HOST=localhost:8085
- 
+      - ./data/gcs:/storage
+    command: -scheme http -public-host ${URL:-localhost}:4443
+    networks:
+      - appnet
 
+  sync:
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    environment:
+      - STORAGE_EMULATOR_HOST=fake-gcs-server:4443
+      - PUBSUB_EMULATOR_HOST=pubsubemulator:8085
+      - GCP_PROJECT_ID=wakuwaku
+    depends_on:
+      - pubsubemulator
+      - fake-gcs-server
+    networks:
+      - appnet
+
+  bucketnotif:
+    build:
+      context: .
+      dockerfile: Dockerfile.bucketnotif
+    environment:
+      - STORAGE_EMULATOR_HOST=fake-gcs-server:4443
+      - PUBSUB_EMULATOR_HOST=pubsubemulator:8085
+      - GCP_PROJECT_ID=wakuwaku
+    depends_on:
+      - fake-gcs-server
+      - sync
+    volumes:
+      - ./data/gcs:/usr/share/fake-gcs-server/storage
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

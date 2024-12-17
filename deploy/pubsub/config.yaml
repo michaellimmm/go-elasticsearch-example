@@ -1,4 +1,4 @@
 topics:
-  - topic_id: "your-topic-id"
+  - topic_id: items-ingestion
     subscriptions:
-      - name: "your-subscription-name"
+      - name: bucket-notification

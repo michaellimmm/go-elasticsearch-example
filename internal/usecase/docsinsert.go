@@ -7,7 +7,7 @@ import (
 
 	"github.com/gocarina/gocsv"
 
-	"github/shaolim/go-elasticsearch-example/app/cli/model"
+	"github/shaolim/go-elasticsearch-example/internal/model"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 )
 

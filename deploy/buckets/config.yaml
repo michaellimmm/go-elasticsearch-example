@@ -1,5 +1,5 @@
 buckets:
-  - name: "test" # bucket name
+  - name: items-ingestion
     notifications:
-      - topic: "your-topic-id" # pubsub topic name
-        subscription: "your-subscription-name"
+      topic: items-ingestion
+      eventType: OBJECT_FINALIZE

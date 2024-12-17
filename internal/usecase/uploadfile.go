@@ -7,15 +7,16 @@ import (
 	"os"
 
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
-	"github/shaolim/go-elasticsearch-example/pkg/gcs"
+
+	"cloud.google.com/go/storage"
 )
 
 type uploadFileToGCSUseCase struct {
 	esClient  esclient.Client
-	gcsClient *gcs.Client
+	gcsClient *storage.Client
 }
 
-func NewUploadFileToGCSUseCase(esClient esclient.Client, gcsClient *gcs.Client) *uploadFileToGCSUseCase {
+func NewUploadFileToGCSUseCase(esClient esclient.Client, gcsClient *storage.Client) *uploadFileToGCSUseCase {
 	return &uploadFileToGCSUseCase{
 		esClient:  esClient,
 		gcsClient: gcsClient,

@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
+	"time"
 
 	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
-	"github.com/spf13/viper"
+	"google.golang.org/api/googleapi"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"gopkg.in/yaml.v3"
@@ -20,9 +20,8 @@ type BucketConfig struct {
 
 type Buckets struct {
 	Name          string `yaml:"name"`
-	Notifications []struct {
-		Topic        string `yaml:"topic"`
-		Subscription string `yaml:"subscription"`
+	Notifications struct {
+		Topic string `yaml:"topic"`
 	} `yaml:"notifications"`
 }
 
@@ -38,20 +37,20 @@ type PubsubTopic struct {
 }
 
 func main() {
-	vp := viper.New()
-	vp.SetConfigFile("./.env")
-	if err := vp.ReadInConfig(); err != nil {
-		log.Fatalf("Error while reading config file: %v", err)
-	}
-	os.Setenv("STORAGE_EMULATOR_HOST", vp.GetString("STORAGE_EMULATOR_HOST"))
-	os.Setenv(`PUBSUB_EMULATOR_HOST`, vp.GetString(`PUBSUB_EMULATOR_HOST`))
-	vp.AutomaticEnv() // Enable automatic environment variable override
+	// waiting for the emulator to be ready
+	time.Sleep(10 * time.Second)
 
-	syncPubsub(vp)
-	syncBuckets(vp)
+	fmt.Println("sync job is running")
+
+	syncPubsub()
+	syncBuckets()
+
+	fmt.Println("deployment file already synced")
 }
 
-func syncPubsub(vp *viper.Viper) {
+func syncPubsub() {
+	fmt.Println("pubsub is syncing...")
+
 	pbConfFile, err := os.ReadFile("deploy/pubsub/config.yaml")
 	if err != nil {
 		panic(err)
@@ -61,8 +60,11 @@ func syncPubsub(vp *viper.Viper) {
 		panic(err)
 	}
 
-	projectID := vp.GetString("GCP_PROJECT_ID")
-	pbClient, err := pubsub.NewClient(context.Background(), projectID)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	projectID := os.Getenv("GCP_PROJECT_ID")
+	pbClient, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
 		panic(err)
 	}
@@ -125,9 +127,16 @@ func syncPubsub(vp *viper.Viper) {
 			}
 		}
 	}
+
+	fmt.Println("pubsub synced")
 }
 
-func syncBuckets(vp *viper.Viper) {
+func syncBuckets() {
+	fmt.Println("buckets is syncing...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
 	bucketsConfFile, err := os.ReadFile("deploy/buckets/config.yaml")
 	if err != nil {
 		panic(err)
@@ -137,42 +146,26 @@ func syncBuckets(vp *viper.Viper) {
 		panic(err)
 	}
 
-	projectID := vp.GetString("GCP_PROJECT_ID")
-	storageEmulatorHost := vp.GetString("STORAGE_EMULATOR_HOST")
-	gcsClient, err := storage.NewClient(context.Background(), option.WithEndpoint(storageEmulatorHost))
+	projectID := os.Getenv("GCP_PROJECT_ID")
+	storageEmulatorHost := os.Getenv("STORAGE_EMULATOR_HOST")
+	gcsClient, err := storage.NewClient(ctx, option.WithEndpoint(storageEmulatorHost))
 	if err != nil {
 		panic(err)
 	}
 	defer gcsClient.Close()
 
-	pbClient, err := pubsub.NewClient(context.Background(), projectID)
-	if err != nil {
-		panic(err)
-	}
-	defer pbClient.Close()
-
 	for _, bc := range bucketsConf.Buckets {
 		bucket := gcsClient.Bucket(bc.Name)
-		if err := bucket.Create(context.Background(), projectID, nil); err != nil {
-			panic(err)
-		}
-
-		if len(bc.Notifications) > 0 {
-			for _, nb := range bc.Notifications {
-				sub := pbClient.Subscription(nb.Subscription)
-				ok, err := sub.Exists(context.Background())
-				if err != nil {
+		if _, err := bucket.Attrs(ctx); err != nil {
+			if e, ok := err.(*googleapi.Error); ok && e.Code == 404 {
+				if err := bucket.Create(ctx, projectID, nil); err != nil {
 					panic(err)
 				}
-				if !ok {
-					if _, err := pbClient.CreateSubscription(context.Background(), nb.Subscription, pubsub.SubscriptionConfig{
-						Topic: pbClient.Topic(nb.Topic),
-					}); err != nil {
-						panic(err)
-					}
-				}
 			}
-		}
 
+			fmt.Printf("failed to get bucket: %s, error: %v\n", bc.Name, err)
+		}
 	}
+
+	fmt.Println("buckets synced")
 }

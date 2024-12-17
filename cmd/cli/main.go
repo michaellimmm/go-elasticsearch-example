@@ -4,12 +4,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github/shaolim/go-elasticsearch-example/app/cli/usecase"
-	config "github/shaolim/go-elasticsearch-example/configs"
+	config "github/shaolim/go-elasticsearch-example/config"
+	"github/shaolim/go-elasticsearch-example/internal/usecase"
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
-	"github/shaolim/go-elasticsearch-example/pkg/gcs"
 	"os"
 	"path/filepath"
+
+	"cloud.google.com/go/storage"
 )
 
 type Command string
@@ -117,7 +118,7 @@ func matchDocs(filename string, languageCode string) error {
 
 func uploadFileToGCS(bucketName, filename string) error {
 	client := esclient.NewClient("http://localhost:9200")
-	gcsClient, err := gcs.NewClient(context.Background(), "test-project", "test-topic")
+	gcsClient, err := storage.NewClient(context.Background())
 	if err != nil {
 		return err
 	}
