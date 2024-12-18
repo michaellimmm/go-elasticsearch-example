@@ -10,7 +10,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
+	"github.com/spf13/viper"
 )
 
 type Command string
@@ -23,8 +25,13 @@ const (
 )
 
 func main() {
-	os.Setenv("STORAGE_EMULATOR_HOST", "localhost:4443")
-	os.Setenv(`PUBSUB_EMULATOR_HOST`, `localhost:8085`)
+	viper.SetConfigFile("./.env")
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err)
+	}
+	os.Setenv("STORAGE_EMULATOR_HOST", viper.GetString("STORAGE_EMULATOR_HOST"))
+	os.Setenv(`PUBSUB_EMULATOR_HOST`, viper.GetString(`PUBSUB_EMULATOR_HOST`))
+	os.Setenv("GCP_PROJECT_ID", viper.GetString("GCP_PROJECT_ID"))
 
 	command := flag.String("command", "", "Command eg. create-index, indexing, match-docs, upload-file-to-gcs")
 	filename := flag.String("file", "", "path of csv file")
@@ -123,9 +130,14 @@ func uploadFileToGCS(bucketName, filename string) error {
 		return err
 	}
 
+	pbClient, err := pubsub.NewClient(context.Background(), os.Getenv("GCP_PROJECT_ID"))
+	if err != nil {
+		return err
+	}
+
 	objectName := filepath.Base(filename)
 
-	uploadFileToGCSUC := usecase.NewUploadFileToGCSUseCase(client, gcsClient)
+	uploadFileToGCSUC := usecase.NewUploadFileToGCSUseCase(client, gcsClient, pbClient)
 	if err := uploadFileToGCSUC.Execute(context.Background(), bucketName, objectName, filename); err != nil {
 		fmt.Printf("failed to upload file to GCS, error: %v\n", err)
 		return err

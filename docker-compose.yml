@@ -50,22 +50,6 @@ services:
     networks:
       - appnet
 
-  bucketnotif:
-    build:
-      context: .
-      dockerfile: Dockerfile.bucketnotif
-    environment:
-      - STORAGE_EMULATOR_HOST=fake-gcs-server:4443
-      - PUBSUB_EMULATOR_HOST=pubsubemulator:8085
-      - GCP_PROJECT_ID=wakuwaku
-    depends_on:
-      - fake-gcs-server
-      - sync
-    volumes:
-      - ./data/gcs:/usr/share/fake-gcs-server/storage
-    networks:
-      - appnet
-
 networks:
   appnet:
     driver: bridge
