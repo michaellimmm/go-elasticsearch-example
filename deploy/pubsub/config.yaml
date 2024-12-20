@@ -2,3 +2,6 @@ topics:
   - topic_id: items-ingestion
     subscriptions:
       - name: bucket-notification
+  - topic_id: item-and-offer
+    subscriptions:
+      - name: items-upsert

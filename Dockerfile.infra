@@ -13,7 +13,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-WORKDIR /app/cmd/infra/sync
+WORKDIR /app/cmd/infra
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # Main container image
@@ -22,7 +22,7 @@ FROM alpine:latest
 # Copy the 'deploy' directory into the final stage
 COPY --from=builder /app/deploy /app/deploy
 # Copy the built binary from the builder stage
-COPY --from=builder /app/cmd/infra/sync/main /app/main
+COPY --from=builder /app/cmd/infra/main /app/main
 
 WORKDIR /app
 

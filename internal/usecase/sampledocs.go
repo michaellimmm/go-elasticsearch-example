@@ -13,17 +13,17 @@ import (
 	"github/shaolim/go-elasticsearch-example/utils/sampler"
 )
 
-type sampleDocs struct {
+type SampleDocs struct {
 	esclient esclient.Client
 }
 
-func NewSampleDocsUseCase(esClient esclient.Client) *sampleDocs {
-	return &sampleDocs{
+func NewSampleDocsUseCase(esClient esclient.Client) *SampleDocs {
+	return &SampleDocs{
 		esclient: esClient,
 	}
 }
 
-func (s *sampleDocs) Execute(index string, filename string) error {
+func (s *SampleDocs) Execute(index string, filename string) error {
 	file, err := os.OpenFile(filename, os.O_RDONLY, 0)
 	if err != nil {
 		return err

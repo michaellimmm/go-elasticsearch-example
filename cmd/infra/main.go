@@ -30,8 +30,8 @@ type PubsubConfig struct {
 }
 
 type PubsubTopic struct {
-	TopicID        string `yaml:"topic_id"`
-	Subscriptioins []struct {
+	TopicID       string `yaml:"topic_id"`
+	Subscriptions []struct {
 		Name string `yaml:"name"`
 	} `yaml:"subscriptions"`
 }
@@ -98,10 +98,12 @@ func syncPubsub() {
 			if _, err := pbClient.CreateTopic(context.Background(), tp.TopicID); err != nil {
 				panic(err)
 			}
+
+			fmt.Printf("created topic: %s\n", tp.TopicID)
 		}
 
-		if len(tp.Subscriptioins) > 0 {
-			for _, sb := range tp.Subscriptioins {
+		if len(tp.Subscriptions) > 0 {
+			for _, sb := range tp.Subscriptions {
 				sub := pbClient.Subscription(sb.Name)
 				ok, err := sub.Exists(context.Background())
 				if err != nil {
@@ -113,6 +115,8 @@ func syncPubsub() {
 					}); err != nil {
 						panic(err)
 					}
+
+					fmt.Printf("created subscription: %s\n", sb.Name)
 				}
 			}
 		}

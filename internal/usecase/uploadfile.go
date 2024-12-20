@@ -16,7 +16,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type uploadFileToGCSUseCase struct {
+type UploadFileToGCSUseCase struct {
 	esClient  esclient.Client
 	gcsClient *storage.Client
 	pbClient  *pubsub.Client
@@ -58,15 +58,15 @@ type GCSNotification struct {
 func NewUploadFileToGCSUseCase(
 	esClient esclient.Client,
 	gcsClient *storage.Client,
-	pbClient *pubsub.Client) *uploadFileToGCSUseCase {
-	return &uploadFileToGCSUseCase{
+	pbClient *pubsub.Client) *UploadFileToGCSUseCase {
+	return &UploadFileToGCSUseCase{
 		esClient:  esClient,
 		gcsClient: gcsClient,
 		pbClient:  pbClient,
 	}
 }
 
-func (u *uploadFileToGCSUseCase) Execute(ctx context.Context, bucketName, objectName, filename string) error {
+func (u *UploadFileToGCSUseCase) Execute(ctx context.Context, bucketName, objectName, filename string) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Printf("failed to open file: %v\n", err)
@@ -111,7 +111,7 @@ func (u *uploadFileToGCSUseCase) Execute(ctx context.Context, bucketName, object
 	return nil
 }
 
-func (u *uploadFileToGCSUseCase) sendNotificationToPubSub(ctx context.Context,
+func (u *UploadFileToGCSUseCase) sendNotificationToPubSub(ctx context.Context,
 	topic *pubsub.Topic,
 	bucketName string,
 	eventType string,

@@ -36,10 +36,10 @@ services:
     networks:
       - appnet
 
-  sync:
+  infra:
     build:
       context: .
-      dockerfile: Dockerfile.sync
+      dockerfile: Dockerfile.infra
     environment:
       - STORAGE_EMULATOR_HOST=fake-gcs-server:4443
       - PUBSUB_EMULATOR_HOST=pubsubemulator:8085

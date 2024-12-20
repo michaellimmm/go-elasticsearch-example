@@ -11,17 +11,17 @@ import (
 	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 )
 
-type docsInsertUseCase struct {
+type DocsInsertUseCase struct {
 	esClient esclient.Client
 }
 
-func NewDocsInsertUseCase(esClient esclient.Client) *docsInsertUseCase {
-	return &docsInsertUseCase{
+func NewDocsInsertUseCase(esClient esclient.Client) *DocsInsertUseCase {
+	return &DocsInsertUseCase{
 		esClient: esClient,
 	}
 }
 
-func (u *docsInsertUseCase) Execute(indexname string, filename string) error {
+func (u *DocsInsertUseCase) Execute(indexname string, filename string) error {
 	file, err := os.OpenFile(filename, os.O_RDONLY, 0)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (u *docsInsertUseCase) Execute(indexname string, filename string) error {
 	return nil
 }
 
-func (u *docsInsertUseCase) processItem(indexname string, in <-chan *model.Item) {
+func (u *DocsInsertUseCase) processItem(indexname string, in <-chan *model.Item) {
 	batches := make([]*model.Item, 0, 100)
 	for item := range in {
 		batches = append(batches, item)
@@ -84,7 +84,7 @@ func (u *docsInsertUseCase) processItem(indexname string, in <-chan *model.Item)
 	}
 }
 
-func (u *docsInsertUseCase) convItemToBulkRequest(items []*model.Item) *esclient.BulkRequests {
+func (u *DocsInsertUseCase) convItemToBulkRequest(items []*model.Item) *esclient.BulkRequests {
 	bulkRequest := &esclient.BulkRequests{}
 	for _, item := range items {
 		docs := model.ConvertItemToItemDoc(*item)

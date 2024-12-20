@@ -16,17 +16,17 @@ const (
 	fileSuffix  = ".json"
 )
 
-type createIndexUseCase struct {
+type CreateIndexUseCase struct {
 	esClient esclient.Client
 }
 
-func NewCreateIndexUseCase(esClient esclient.Client) *createIndexUseCase {
-	return &createIndexUseCase{
+func NewCreateIndexUseCase(esClient esclient.Client) *CreateIndexUseCase {
+	return &CreateIndexUseCase{
 		esClient: esClient,
 	}
 }
 
-func (c *createIndexUseCase) Execute() error {
+func (c *CreateIndexUseCase) Execute() error {
 	itemIndexEnSettings, err := c.loadJsonFile(itemIndexEn)
 	if err != nil {
 		fmt.Printf("failed to load json file: %s, error: %v\n", itemIndexEn, err)
@@ -54,7 +54,7 @@ func (c *createIndexUseCase) Execute() error {
 	return nil
 }
 
-func (c *createIndexUseCase) createIndexIfNotExists(indexName string, body io.Reader) error {
+func (c *CreateIndexUseCase) createIndexIfNotExists(indexName string, body io.Reader) error {
 	indexRes, err := c.esClient.GetIndeces([]string{indexName}, esclient.GetIndecesWithHttpHeadOnly())
 	if err != nil {
 		return err
@@ -70,7 +70,7 @@ func (c *createIndexUseCase) createIndexIfNotExists(indexName string, body io.Re
 	return nil
 }
 
-func (c *createIndexUseCase) loadJsonFile(filename string) ([]byte, error) {
+func (c *CreateIndexUseCase) loadJsonFile(filename string) ([]byte, error) {
 	data, err := index.ConfigFiles.ReadFile(filename + fileSuffix)
 	if err != nil {
 		return nil, err
