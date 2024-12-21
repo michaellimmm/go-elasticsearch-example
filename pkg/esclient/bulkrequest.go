@@ -19,6 +19,10 @@ func (b *BulkRequests) Add(bulkRequest BulkableRequest) *BulkRequests {
 	return b
 }
 
+func (b *BulkRequests) Length() int {
+	return len(b.BulkRequests)
+}
+
 func (b BulkRequests) String() (string, error) {
 	var sb strings.Builder
 	for _, bulkRequest := range b.BulkRequests {

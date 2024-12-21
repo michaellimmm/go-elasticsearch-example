@@ -5,6 +5,7 @@ import (
 	"github/shaolim/go-elasticsearch-example/internal/delivery/messaging"
 	"github/shaolim/go-elasticsearch-example/internal/lib"
 	"github/shaolim/go-elasticsearch-example/internal/usecase"
+	"github/shaolim/go-elasticsearch-example/pkg/esclient"
 	"log"
 
 	"cloud.google.com/go/pubsub"
@@ -30,9 +31,11 @@ func main() {
 	}
 	defer gcsClient.Close()
 
+	esClient := esclient.NewClient("http://localhost:9200")
+
 	// usecase
 	ingestionUseCase := usecase.NewIngestionUseCase(vp, logger, gcsClient, getItemIngestionTopic(pbClient))
-	itemUseCase := usecase.NewItemUpsertUseCase()
+	itemUseCase := usecase.NewItemUpsertUseCase(logger, esClient)
 
 	gcsNotifConsumer := messaging.NewGCSNotifConsumer(logger, ingestionUseCase)
 	gcsNotifSubscriber := pbClient.Subscription("bucket-notification")

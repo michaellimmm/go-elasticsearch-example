@@ -25,10 +25,12 @@ func NewItemUpsertConsumer(logger *slog.Logger, itemUseCase *usecase.ItemUpsertU
 func (c *ItemUpsertConsumer) Consume(ctx context.Context, msg *pubsub.Message) {
 	var items []*model.Item
 	if err := json.Unmarshal(msg.Data, &items); err != nil {
-		c.logger.Error("failed to unmarshal, err: %v\n", err)
+		c.logger.Error("failed to unmarshal, err: %v\n", slog.Any("error", err))
 		msg.Ack()
 		return
 	}
+
+	c.logger.Info("item upsert", slog.Any("items", items))
 
 	err := c.itemUseCase.Execute(ctx, items)
 	if err != nil {
