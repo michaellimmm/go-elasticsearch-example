@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"encoding/json"
-	"github/shaolim/go-elasticsearch-example/internal/lib"
-	"github/shaolim/go-elasticsearch-example/internal/model"
+	"github/shaolim/kakashi/internal/lib"
+	"github/shaolim/kakashi/internal/model"
 	"log/slog"
 	"sync"
 

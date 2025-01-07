@@ -1,7 +1,7 @@
 package esclient_test
 
 import (
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/kakashi/pkg/esclient"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

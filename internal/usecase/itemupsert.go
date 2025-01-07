@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"github/shaolim/go-elasticsearch-example/config"
-	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/kakashi/config"
+	"github/shaolim/kakashi/internal/model"
+	"github/shaolim/kakashi/pkg/esclient"
 	"log/slog"
 )
 

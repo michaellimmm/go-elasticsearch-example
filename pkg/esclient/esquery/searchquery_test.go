@@ -1,7 +1,7 @@
 package esquery_test
 
 import (
-	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
+	"github/shaolim/kakashi/pkg/esclient/esquery"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

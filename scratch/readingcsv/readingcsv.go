@@ -8,7 +8,7 @@ import (
 
 	"github.com/gocarina/gocsv"
 
-	"github/shaolim/go-elasticsearch-example/internal/model"
+	"github/shaolim/kakashi/internal/model"
 )
 
 func ReadCSVWithoutChannel(filename string) error {

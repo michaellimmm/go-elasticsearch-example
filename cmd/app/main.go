@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"github/shaolim/go-elasticsearch-example/internal/delivery/messaging"
-	"github/shaolim/go-elasticsearch-example/internal/lib"
-	"github/shaolim/go-elasticsearch-example/internal/usecase"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/kakashi/internal/delivery/messaging"
+	"github/shaolim/kakashi/internal/lib"
+	"github/shaolim/kakashi/internal/usecase"
+	"github/shaolim/kakashi/pkg/esclient"
 	"log"
 
 	"cloud.google.com/go/pubsub"

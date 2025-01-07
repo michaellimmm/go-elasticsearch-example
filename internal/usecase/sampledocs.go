@@ -7,10 +7,10 @@ import (
 
 	"github.com/gocarina/gocsv"
 
-	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
-	"github/shaolim/go-elasticsearch-example/utils/sampler"
+	"github/shaolim/kakashi/internal/model"
+	"github/shaolim/kakashi/pkg/esclient"
+	"github/shaolim/kakashi/pkg/esclient/esquery"
+	"github/shaolim/kakashi/utils/sampler"
 )
 
 type SampleDocs struct {

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io"
 
-	index "github/shaolim/go-elasticsearch-example/config/index"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	index "github/shaolim/kakashi/config/index"
+	"github/shaolim/kakashi/pkg/esclient"
 )
 
 const (

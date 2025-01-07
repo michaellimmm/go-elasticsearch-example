@@ -3,8 +3,8 @@ package messaging
 import (
 	"context"
 	"encoding/json"
-	"github/shaolim/go-elasticsearch-example/internal/model"
-	"github/shaolim/go-elasticsearch-example/internal/usecase"
+	"github/shaolim/kakashi/internal/model"
+	"github/shaolim/kakashi/internal/usecase"
 	"log/slog"
 
 	"cloud.google.com/go/pubsub"

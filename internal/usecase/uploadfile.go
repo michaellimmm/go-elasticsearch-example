@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	"github/shaolim/kakashi/pkg/esclient"
 
 	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"

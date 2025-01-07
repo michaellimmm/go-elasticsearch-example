@@ -4,9 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	config "github/shaolim/go-elasticsearch-example/config"
-	"github/shaolim/go-elasticsearch-example/internal/usecase"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient"
+	config "github/shaolim/kakashi/config"
+	"github/shaolim/kakashi/internal/usecase"
+	"github/shaolim/kakashi/pkg/esclient"
 	"os"
 	"path/filepath"
 

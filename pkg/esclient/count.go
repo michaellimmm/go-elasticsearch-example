@@ -3,7 +3,7 @@ package esclient
 import (
 	"bytes"
 	"encoding/json"
-	"github/shaolim/go-elasticsearch-example/pkg/esclient/esquery"
+	"github/shaolim/kakashi/pkg/esclient/esquery"
 	"net/http"
 )
 
