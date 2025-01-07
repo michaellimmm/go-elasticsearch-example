@@ -115,7 +115,7 @@ func main() {
 	}
 	defer db.Close()
 
-	query := fmt.Sprintf(`SELECT * 
+	query := fmt.Sprintf(`select setseed(0.5); SELECT * 
 	FROM read_parquet('%s') 
 	ORDER BY RANDOM() 
 	LIMIT %d`, *masterData, *totalRow)
