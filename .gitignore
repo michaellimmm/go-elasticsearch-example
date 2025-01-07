@@ -1,7 +1,7 @@
 .DS_Store
 .idea/
 .env
-*.csv
+bucket/*.csv
 data/
 tmp/
 *.parquet
