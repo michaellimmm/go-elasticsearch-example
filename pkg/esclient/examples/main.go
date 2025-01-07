@@ -42,40 +42,48 @@ func main() {
 		return
 	}
 
+	deleteResponse, err := client.DeleteIndeces([]string{"products"}, esclient.DeleteIndecesWithIgnoreUnavailable())
+	if err != nil {
+		logger.Error("error", slog.Any("error", err))
+		return
+	}
+
+	logger.Info("index deleted", slog.Any("body", deleteResponse.Result))
+
 	if err := createIndexIfNotExists(client); err != nil {
 		return
 	}
 
-	// bulkRequest := esclient.BulkRequests{}
-	// bulkRequest.
-	// 	Add(esclient.NewBulkIndexRequest().SetId("1").
-	// 		SetDoc(product{Name: "Laptop Pro 15", Price: 1200, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("2").
-	// 		SetDoc(product{Name: "Smartphone X", Price: 999, InStock: boolPtr(false)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("3").
-	// 		SetDoc(product{Name: "Noise-Canceling Headphones", Price: 199, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("4").
-	// 		SetDoc(product{Name: "Mechanical Keyboard", Price: 85, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("5").
-	// 		SetDoc(product{Name: "Gaming Mouse", Price: 45, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("6").
-	// 		SetDoc(product{Name: "4K Monitor", Price: 450, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("7").
-	// 		SetDoc(product{Name: "Bluetooth Speaker", Price: 75, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("8").
-	// 		SetDoc(product{Name: "External SSD 1TB", Price: 150, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("9").
-	// 		SetDoc(product{Name: "Fitness Tracker", Price: 60, InStock: boolPtr(true)})).
-	// 	Add(esclient.NewBulkIndexRequest().SetId("10").
-	// 		SetDoc(product{Name: "Smart Home Hub", Price: 99, InStock: boolPtr(true)}))
+	bulkRequest := esclient.BulkRequests{}
+	bulkRequest.
+		Add(esclient.NewBulkIndexRequest().SetId("1").
+			SetDoc(product{Name: "Laptop Pro 15", Price: 1200, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("2").
+			SetDoc(product{Name: "Smartphone X", Price: 999, InStock: boolPtr(false)})).
+		Add(esclient.NewBulkIndexRequest().SetId("3").
+			SetDoc(product{Name: "Noise-Canceling Headphones", Price: 199, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("4").
+			SetDoc(product{Name: "Mechanical Keyboard", Price: 85, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("5").
+			SetDoc(product{Name: "Gaming Mouse", Price: 45, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("6").
+			SetDoc(product{Name: "4K Monitor", Price: 450, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("7").
+			SetDoc(product{Name: "Bluetooth Speaker", Price: 75, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("8").
+			SetDoc(product{Name: "External SSD 1TB", Price: 150, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("9").
+			SetDoc(product{Name: "Fitness Tracker", Price: 60, InStock: boolPtr(true)})).
+		Add(esclient.NewBulkIndexRequest().SetId("10").
+			SetDoc(product{Name: "Smart Home Hub", Price: 99, InStock: boolPtr(true)}))
 
-	// bulkResponse, err := client.Bulk("products", bulkRequest)
-	// if err != nil {
-	// 	logger.Error("bulk", slog.Any("error", err))
-	// 	return
-	// }
+	bulkResponse, err := client.Bulk("products", bulkRequest)
+	if err != nil {
+		logger.Error("bulk", slog.Any("error", err))
+		return
+	}
 
-	// logger.Info("bulk", slog.Any("result", bulkResponse.Result))
+	logger.Info("bulk", slog.Any("result", bulkResponse.Result))
 
 	searchRequest := esquery.NewSearchQueryBuilder().
 		SetSize(10).

@@ -10,7 +10,7 @@ import (
 type Index interface {
 	CreateIndex(index string, body io.Reader) (*Response[IndexCreationResult], error)
 	GetIndeces(index []string, options ...getIndecesOptions) (*Response[map[string]*IndexGetResult], error)
-	DeleteIndeces(index []string) (*Response[IndexDeletionResult], error)
+	DeleteIndeces(index []string, options ...deleteIndecesOptions) (*Response[IndexDeletionResult], error)
 }
 
 type IndexCreationResult struct {
@@ -110,10 +110,33 @@ func (c *client) GetIndeces(index []string, options ...getIndecesOptions) (*Resp
 	return response, nil
 }
 
-func (c *client) DeleteIndeces(index []string) (*Response[IndexDeletionResult], error) {
+type deleteIndecesOptions func(*deleteIndecesParams)
+
+type deleteIndecesParams struct {
+	ignoreUnavailable bool
+}
+
+func DeleteIndecesWithIgnoreUnavailable() deleteIndecesOptions {
+	return func(params *deleteIndecesParams) {
+		params.ignoreUnavailable = true
+	}
+}
+
+func (c *client) DeleteIndeces(index []string, options ...deleteIndecesOptions) (*Response[IndexDeletionResult], error) {
+	params := &deleteIndecesParams{}
+	for _, option := range options {
+		option(params)
+	}
+
 	uri, err := url.Parse(c.baseUrl + "/" + strings.Join(index, ","))
 	if err != nil {
 		return nil, err
+	}
+
+	if params.ignoreUnavailable {
+		q := uri.Query()
+		q.Add("ignore_unavailable", "true")
+		uri.RawQuery = q.Encode()
 	}
 
 	req, err := http.NewRequest("DELETE", uri.String(), nil)
